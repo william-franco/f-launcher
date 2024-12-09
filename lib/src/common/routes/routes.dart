@@ -1,11 +1,13 @@
+import 'package:f_launcher/src/features/launcher/routes/launcher_routes.dart';
 import 'package:go_router/go_router.dart';
 
 class Routes {
   static final GoRouter routes = GoRouter(
     debugLogDiagnostics: true,
-    initialLocation: UserRoutes.users,
+    initialLocation: LauncherRoutes.apps,
     routes: [
-      ...SettingRoutes.routes,
+      ...LauncherRoutes.routes,
+      // ...SettingRoutes.routes,
     ],
   );
 }
