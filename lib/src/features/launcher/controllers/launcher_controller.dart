@@ -11,6 +11,8 @@ typedef _Controller = ValueNotifier<LauncherState>;
 abstract interface class LauncherController extends _Controller {
   LauncherController() : super(LauncherInitialState());
 
+  LauncherFilterEnum get currentFilter;
+
   Future<void> updateFilter(LauncherFilterEnum filter);
   Future<void> getApps();
   Future<void> openApp(String packageName);
@@ -25,6 +27,8 @@ class LauncherControllerImpl extends _Controller implements LauncherController {
   }) : super(LauncherInitialState());
 
   LauncherFilterEnum _currentFilter = LauncherFilterEnum.all;
+
+  @override
   LauncherFilterEnum get currentFilter => _currentFilter;
 
   @override

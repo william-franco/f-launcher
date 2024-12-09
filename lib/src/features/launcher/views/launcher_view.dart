@@ -2,7 +2,9 @@ import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.d
 import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
 import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
 import 'package:f_launcher/src/features/launcher/states/launcher_state.dart';
+import 'package:f_launcher/src/features/settings/routes/setting_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LauncherView extends StatefulWidget {
   const LauncherView({super.key});
@@ -31,7 +33,7 @@ class _LauncherViewState extends State<LauncherView> {
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
-              // context.push(SettingRoutes.setting);
+              context.push(SettingRoutes.setting);
             },
           ),
         ],
