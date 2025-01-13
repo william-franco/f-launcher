@@ -1,0 +1,85 @@
+import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.dart';
+import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
+import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
+import 'package:f_launcher/src/features/launcher/states/launcher_state.dart';
+import 'package:f_launcher/src/features/settings/routes/setting_routes.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class LauncherView extends StatefulWidget {
+  const LauncherView({super.key});
+
+  @override
+  State<LauncherView> createState() => _LauncherViewState();
+}
+
+class _LauncherViewState extends State<LauncherView> {
+  late final LauncherController launcherController;
+
+  @override
+  void initState() {
+    super.initState();
+    launcherController = locator<LauncherController>();
+    launcherController.getApps();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('Apps'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () {
+              context.push(SettingRoutes.setting);
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await launcherController.getApps();
+          },
+          child: ValueListenableBuilder<LauncherState>(
+            valueListenable: launcherController,
+            builder: (context, state, widget) {
+              return switch (state) {
+                LauncherInitialState() => const Text('List is empty.'),
+                LauncherLoadingState() => ListView.builder(
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return const SkeletonRefreshWidget();
+                    },
+                  ),
+                LauncherSuccessState(apps: final apps) => ListView.builder(
+                    itemCount: apps.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final app = apps[index];
+                      return InkWell(
+                        child: Card(
+                          child: ListTile(
+                            leading: app.icon.isNotEmpty
+                                ? Image.memory(app.icon, width: 40, height: 40)
+                                : const Icon(Icons.apps),
+                            title: Text(app.name),
+                            subtitle: Text(app.packageName),
+                            onTap: () {
+                              launcherController.openApp(app.packageName);
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                LauncherErrorState(message: final message) => Text(message),
+              };
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
