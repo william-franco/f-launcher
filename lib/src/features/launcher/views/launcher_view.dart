@@ -45,8 +45,8 @@ class _LauncherViewState extends State<LauncherView> {
           },
           child: ValueListenableBuilder<LauncherState>(
             valueListenable: launcherController,
-            builder: (context, state, widget) {
-              return switch (state) {
+            builder: (context, sauncherState, widget) {
+              return switch (sauncherState) {
                 LauncherInitialState() => const Text('List is empty.'),
                 LauncherLoadingState() => ListView.builder(
                     itemCount: 10,

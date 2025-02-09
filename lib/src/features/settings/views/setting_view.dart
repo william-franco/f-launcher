@@ -30,7 +30,7 @@ class _SettingViewState extends State<SettingView> {
       applicationIcon: const FlutterLogo(),
       applicationName: 'F Launcher',
       applicationVersion: 'Version 1.0.0',
-      applicationLegalese: '\u{a9} 2024 William Franco',
+      applicationLegalese: '\u{a9} 2025 William Franco',
     );
   }
 
@@ -72,9 +72,9 @@ class _SettingViewState extends State<SettingView> {
               title: const Text('Dark theme'),
               trailing: ValueListenableBuilder<SettingModel>(
                 valueListenable: settingController,
-                builder: (context, value, widget) {
+                builder: (context, settingModel, widget) {
                   return Switch(
-                    value: value.isDarkTheme,
+                    value: settingModel.isDarkTheme,
                     onChanged: (bool isDarkTheme) {
                       settingController.changeTheme(isDarkTheme: isDarkTheme);
                     },
