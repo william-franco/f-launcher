@@ -15,6 +15,7 @@ lib/
         │   ├── exception_handlings/
         │   ├── routes/
         │   ├── services/
+        │   ├── states/
         │   └── widgets/
         └── features/
             ├── launcher/
@@ -22,7 +23,6 @@ lib/
             │   ├── models/
             │   ├── repositories/
             │   ├── routes/
-            │   ├── states/
             │   └── views/
             └── settings/
                 ├── controllers/
