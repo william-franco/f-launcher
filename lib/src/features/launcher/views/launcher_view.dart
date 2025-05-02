@@ -1,7 +1,7 @@
 import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.dart';
+import 'package:f_launcher/src/common/states/state.dart';
 import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
 import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
-import 'package:f_launcher/src/features/launcher/states/launcher_state.dart';
 import 'package:f_launcher/src/features/settings/routes/setting_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -43,38 +43,43 @@ class _LauncherViewState extends State<LauncherView> {
           onRefresh: () async {
             await launcherController.getApps();
           },
-          child: ValueListenableBuilder<LauncherState>(
-            valueListenable: launcherController,
-            builder: (context, sauncherState, widget) {
-              return switch (sauncherState) {
-                LauncherInitialState() => const Text('List is empty.'),
-                LauncherLoadingState() => ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return const SkeletonRefreshWidget();
-                    },
-                  ),
-                LauncherSuccessState(apps: final apps) => ListView.builder(
-                    itemCount: apps.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final app = apps[index];
-                      return InkWell(
-                        child: Card(
-                          child: ListTile(
-                            leading: app.icon.isNotEmpty
-                                ? Image.memory(app.icon, width: 40, height: 40)
-                                : const Icon(Icons.apps),
-                            title: Text(app.name),
-                            subtitle: Text(app.packageName),
-                            onTap: () {
-                              launcherController.openApp(app.packageName);
-                            },
-                          ),
+          child: ListenableBuilder(
+            listenable: launcherController,
+            builder: (context, child) {
+              return switch (launcherController.appsState) {
+                InitialState() => const Text('List is empty.'),
+                LoadingState() => ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return const SkeletonRefreshWidget();
+                  },
+                ),
+                SuccessState(data: final apps) => ListView.builder(
+                  itemCount: apps.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final app = apps[index];
+                    return InkWell(
+                      child: Card(
+                        child: ListTile(
+                          leading:
+                              app.icon.isNotEmpty
+                                  ? Image.memory(
+                                    app.icon,
+                                    width: 40,
+                                    height: 40,
+                                  )
+                                  : const Icon(Icons.apps),
+                          title: Text(app.name),
+                          subtitle: Text(app.packageName),
+                          onTap: () {
+                            launcherController.openApp(app.packageName);
+                          },
                         ),
-                      );
-                    },
-                  ),
-                LauncherErrorState(message: final message) => Text(message),
+                      ),
+                    );
+                  },
+                ),
+                ErrorState(message: final message) => Text(message),
               };
             },
           ),

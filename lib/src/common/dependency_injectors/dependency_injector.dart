@@ -14,9 +14,7 @@ void dependencyInjector() {
 }
 
 void _startStorageService() {
-  locator.registerLazySingleton<StorageService>(
-    () => StorageServiceImpl(),
-  );
+  locator.registerLazySingleton<StorageService>(() => StorageServiceImpl());
 }
 
 void _startFeatureLauncher() {
@@ -32,21 +30,17 @@ void _startFeatureLauncher() {
 
 void _startFeatureSetting() {
   locator.registerCachedFactory<SettingRepository>(
-    () => SettingRepositoryImpl(
-      storageService: locator<StorageService>(),
-    ),
+    () => SettingRepositoryImpl(storageService: locator<StorageService>()),
   );
   locator.registerCachedFactory<SettingController>(
-    () => SettingControllerImpl(
-      settingRepository: locator<SettingRepository>(),
-    ),
+    () =>
+        SettingControllerImpl(settingRepository: locator<SettingRepository>()),
   );
 }
 
 Future<void> initDependencies() async {
-  await Future.wait([
-    locator<SettingController>().loadTheme(),
-  ]);
+  await locator<StorageService>().initStorage();
+  await Future.wait([locator<SettingController>().loadTheme()]);
 }
 
 void resetDependencies() {

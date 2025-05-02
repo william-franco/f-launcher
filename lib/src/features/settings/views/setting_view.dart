@@ -2,7 +2,6 @@ import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.d
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
 import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
 import 'package:f_launcher/src/features/settings/controllers/setting_controller.dart';
-import 'package:f_launcher/src/features/settings/models/setting_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -54,12 +53,13 @@ class _SettingViewState extends State<SettingView> {
               title: const Text('Select application type'),
               trailing: DropdownButton<LauncherFilterEnum>(
                 value: launcherController.currentFilter,
-                items: LauncherFilterEnum.values.map((filter) {
-                  return DropdownMenuItem<LauncherFilterEnum>(
-                    value: filter,
-                    child: Text(filter.name),
-                  );
-                }).toList(),
+                items:
+                    LauncherFilterEnum.values.map((filter) {
+                      return DropdownMenuItem<LauncherFilterEnum>(
+                        value: filter,
+                        child: Text(filter.name),
+                      );
+                    }).toList(),
                 onChanged: (filter) {
                   if (filter != null) {
                     launcherController.updateFilter(filter);
@@ -70,11 +70,11 @@ class _SettingViewState extends State<SettingView> {
             ListTile(
               leading: const Icon(Icons.brightness_6_outlined),
               title: const Text('Dark theme'),
-              trailing: ValueListenableBuilder<SettingModel>(
-                valueListenable: settingController,
-                builder: (context, settingModel, widget) {
+              trailing: ListenableBuilder(
+                listenable: settingController,
+                builder: (context, child) {
                   return Switch(
-                    value: settingModel.isDarkTheme,
+                    value: settingController.settingModel.isDarkTheme,
                     onChanged: (bool isDarkTheme) {
                       settingController.changeTheme(isDarkTheme: isDarkTheme);
                     },
