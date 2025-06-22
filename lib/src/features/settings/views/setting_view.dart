@@ -1,29 +1,20 @@
-import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.dart';
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
 import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
 import 'package:f_launcher/src/features/settings/controllers/setting_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingView extends StatefulWidget {
-  const SettingView({super.key});
+class SettingView extends StatelessWidget {
+  final SettingController settingController;
+  final LauncherController launcherController;
 
-  @override
-  State<SettingView> createState() => _SettingViewState();
-}
+  const SettingView({
+    super.key,
+    required this.settingController,
+    required this.launcherController,
+  });
 
-class _SettingViewState extends State<SettingView> {
-  late final SettingController settingController;
-  late final LauncherController launcherController;
-
-  @override
-  void initState() {
-    super.initState();
-    settingController = locator<SettingController>();
-    launcherController = locator<LauncherController>();
-  }
-
-  void _showAboutDialog() {
+  void _showAboutDialog(BuildContext context) {
     showAboutDialog(
       context: context,
       applicationIcon: const FlutterLogo(),
@@ -53,13 +44,12 @@ class _SettingViewState extends State<SettingView> {
               title: const Text('Select application type'),
               trailing: DropdownButton<LauncherFilterEnum>(
                 value: launcherController.currentFilter,
-                items:
-                    LauncherFilterEnum.values.map((filter) {
-                      return DropdownMenuItem<LauncherFilterEnum>(
-                        value: filter,
-                        child: Text(filter.name),
-                      );
-                    }).toList(),
+                items: LauncherFilterEnum.values.map((filter) {
+                  return DropdownMenuItem<LauncherFilterEnum>(
+                    value: filter,
+                    child: Text(filter.name),
+                  );
+                }).toList(),
                 onChanged: (filter) {
                   if (filter != null) {
                     launcherController.updateFilter(filter);
@@ -86,7 +76,7 @@ class _SettingViewState extends State<SettingView> {
               leading: const Icon(Icons.info_outline),
               title: const Text('About'),
               onTap: () {
-                _showAboutDialog();
+                _showAboutDialog(context);
               },
             ),
           ],

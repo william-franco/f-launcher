@@ -1,4 +1,3 @@
-import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.dart';
 import 'package:f_launcher/src/common/states/state.dart';
 import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
 import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
@@ -7,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class LauncherView extends StatefulWidget {
-  const LauncherView({super.key});
+  final LauncherController launcherController;
+
+  const LauncherView({super.key, required this.launcherController});
 
   @override
   State<LauncherView> createState() => _LauncherViewState();
@@ -19,7 +20,7 @@ class _LauncherViewState extends State<LauncherView> {
   @override
   void initState() {
     super.initState();
-    launcherController = locator<LauncherController>();
+    launcherController = widget.launcherController;
     launcherController.getApps();
   }
 
@@ -61,14 +62,9 @@ class _LauncherViewState extends State<LauncherView> {
                     return InkWell(
                       child: Card(
                         child: ListTile(
-                          leading:
-                              app.icon.isNotEmpty
-                                  ? Image.memory(
-                                    app.icon,
-                                    width: 40,
-                                    height: 40,
-                                  )
-                                  : const Icon(Icons.apps),
+                          leading: app.icon.isNotEmpty
+                              ? Image.memory(app.icon, width: 40, height: 40)
+                              : const Icon(Icons.apps),
                           title: Text(app.name),
                           subtitle: Text(app.packageName),
                           onTap: () {
