@@ -1,7 +1,7 @@
 import 'package:f_launcher/src/common/services/storage_service.dart';
-import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
+import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
-import 'package:f_launcher/src/features/settings/controllers/setting_controller.dart';
+import 'package:f_launcher/src/features/settings/view_models/setting_view_model.dart';
 import 'package:f_launcher/src/features/settings/repositories/setting_repository.dart';
 import 'package:get_it/get_it.dart';
 
@@ -21,8 +21,8 @@ void _startFeatureLauncher() {
   locator.registerCachedFactory<LauncherRepository>(
     () => LauncherRepositoryImpl(),
   );
-  locator.registerCachedFactory<LauncherController>(
-    () => LauncherControllerImpl(
+  locator.registerLazySingleton<LauncherViewModel>(
+    () => LauncherViewModelImpl(
       launcherRepository: locator<LauncherRepository>(),
     ),
   );
@@ -32,15 +32,14 @@ void _startFeatureSetting() {
   locator.registerCachedFactory<SettingRepository>(
     () => SettingRepositoryImpl(storageService: locator<StorageService>()),
   );
-  locator.registerCachedFactory<SettingController>(
-    () =>
-        SettingControllerImpl(settingRepository: locator<SettingRepository>()),
+  locator.registerLazySingleton<SettingViewModel>(
+    () => SettingViewModelImpl(settingRepository: locator<SettingRepository>()),
   );
 }
 
 Future<void> initDependencies() async {
   await locator<StorageService>().initStorage();
-  await Future.wait([locator<SettingController>().loadTheme()]);
+  await Future.wait([locator<SettingViewModel>().getTheme()]);
 }
 
 void resetDependencies() {
@@ -49,6 +48,6 @@ void resetDependencies() {
 
 void resetFeatureSetting() {
   locator.unregister<SettingRepository>();
-  locator.unregister<SettingController>();
+  locator.unregister<SettingViewModel>();
   _startFeatureSetting();
 }

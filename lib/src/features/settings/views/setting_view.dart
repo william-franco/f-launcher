@@ -1,17 +1,17 @@
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
-import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
-import 'package:f_launcher/src/features/settings/controllers/setting_controller.dart';
+import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
+import 'package:f_launcher/src/features/settings/view_models/setting_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingView extends StatelessWidget {
-  final SettingController settingController;
-  final LauncherController launcherController;
+  final SettingViewModel settingViewModel;
+  final LauncherViewModel launcherViewModel;
 
   const SettingView({
     super.key,
-    required this.settingController,
-    required this.launcherController,
+    required this.settingViewModel,
+    required this.launcherViewModel,
   });
 
   void _showAboutDialog(BuildContext context) {
@@ -43,7 +43,7 @@ class SettingView extends StatelessWidget {
             ListTile(
               title: const Text('Select application type'),
               trailing: DropdownButton<LauncherFilterEnum>(
-                value: launcherController.currentFilter,
+                value: launcherViewModel.currentFilter,
                 items: LauncherFilterEnum.values.map((filter) {
                   return DropdownMenuItem<LauncherFilterEnum>(
                     value: filter,
@@ -52,7 +52,7 @@ class SettingView extends StatelessWidget {
                 }).toList(),
                 onChanged: (filter) {
                   if (filter != null) {
-                    launcherController.updateFilter(filter);
+                    launcherViewModel.updateFilter(filter);
                   }
                 },
               ),
@@ -61,12 +61,12 @@ class SettingView extends StatelessWidget {
               leading: const Icon(Icons.brightness_6_outlined),
               title: const Text('Dark theme'),
               trailing: ListenableBuilder(
-                listenable: settingController,
+                listenable: settingViewModel,
                 builder: (context, child) {
                   return Switch(
-                    value: settingController.settingModel.isDarkTheme,
+                    value: settingViewModel.settingModel.isDarkTheme,
                     onChanged: (bool isDarkTheme) {
-                      settingController.changeTheme(isDarkTheme: isDarkTheme);
+                      settingViewModel.changeTheme(isDarkTheme: isDarkTheme);
                     },
                   );
                 },

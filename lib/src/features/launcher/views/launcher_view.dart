@@ -1,27 +1,24 @@
 import 'package:f_launcher/src/common/states/state.dart';
 import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
-import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
+import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
 import 'package:f_launcher/src/features/settings/routes/setting_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class LauncherView extends StatefulWidget {
-  final LauncherController launcherController;
+  final LauncherViewModel launcherViewModel;
 
-  const LauncherView({super.key, required this.launcherController});
+  const LauncherView({super.key, required this.launcherViewModel});
 
   @override
   State<LauncherView> createState() => _LauncherViewState();
 }
 
 class _LauncherViewState extends State<LauncherView> {
-  late final LauncherController launcherController;
-
   @override
   void initState() {
     super.initState();
-    launcherController = widget.launcherController;
-    launcherController.getApps();
+    widget.launcherViewModel.getApps();
   }
 
   @override
@@ -42,12 +39,12 @@ class _LauncherViewState extends State<LauncherView> {
       body: Center(
         child: RefreshIndicator(
           onRefresh: () async {
-            await launcherController.getApps();
+            await widget.launcherViewModel.getApps();
           },
           child: ListenableBuilder(
-            listenable: launcherController,
+            listenable: widget.launcherViewModel,
             builder: (context, child) {
-              return switch (launcherController.appsState) {
+              return switch (widget.launcherViewModel.appsState) {
                 InitialState() => const Text('List is empty.'),
                 LoadingState() => ListView.builder(
                   itemCount: 10,
@@ -68,7 +65,7 @@ class _LauncherViewState extends State<LauncherView> {
                           title: Text(app.name),
                           subtitle: Text(app.packageName),
                           onTap: () {
-                            launcherController.openApp(app.packageName);
+                            widget.launcherViewModel.openApp(app.packageName);
                           },
                         ),
                       ),

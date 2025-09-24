@@ -1,6 +1,6 @@
 import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.dart';
-import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
-import 'package:f_launcher/src/features/settings/controllers/setting_controller.dart';
+import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
+import 'package:f_launcher/src/features/settings/view_models/setting_view_model.dart';
 import 'package:f_launcher/src/features/settings/views/setting_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,8 +14,8 @@ class SettingRoutes {
       path: setting,
       builder: (context, state) {
         return SettingView(
-          launcherController: locator<LauncherController>(),
-          settingController: locator<SettingController>(),
+          launcherViewModel: locator<LauncherViewModel>(),
+          settingViewModel: locator<SettingViewModel>(),
         );
       },
     ),

@@ -1,5 +1,5 @@
 import 'package:f_launcher/src/common/dependency_injectors/dependency_injector.dart';
-import 'package:f_launcher/src/features/launcher/controllers/launcher_controller.dart';
+import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
 import 'package:f_launcher/src/features/launcher/views/launcher_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,7 +12,7 @@ class LauncherRoutes {
     GoRoute(
       path: apps,
       builder: (context, state) {
-        return LauncherView(launcherController: locator<LauncherController>());
+        return LauncherView(launcherViewModel: locator<LauncherViewModel>());
       },
     ),
   ];

@@ -1,16 +1,17 @@
-import 'package:f_launcher/src/common/constants/constants.dart';
+import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
-import 'package:f_launcher/src/common/exception_handlings/exception_handling.dart';
 import 'package:f_launcher/src/common/states/state.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-typedef _Controller = ChangeNotifier;
+typedef _ViewModel = ChangeNotifier;
 
-abstract interface class LauncherController extends _Controller {
-  AppState<List<LauncherModel>> get appsState;
+typedef LauncherState = AppState<List<LauncherModel>>;
+
+abstract interface class LauncherViewModel extends _ViewModel {
+  LauncherState get appsState;
   LauncherFilterEnum get currentFilter;
 
   Future<void> updateFilter(LauncherFilterEnum filter);
@@ -18,17 +19,16 @@ abstract interface class LauncherController extends _Controller {
   Future<void> openApp(String packageName);
 }
 
-class LauncherControllerImpl extends _Controller implements LauncherController {
-  static const MethodChannel _channel = MethodChannel(Constants.pathChannel);
+class LauncherViewModelImpl extends _ViewModel implements LauncherViewModel {
+  static final _channel = MethodChannel(ValueConstant.pathChannel);
   final LauncherRepository launcherRepository;
 
-  LauncherControllerImpl({required this.launcherRepository});
+  LauncherViewModelImpl({required this.launcherRepository});
 
-  AppState<List<LauncherModel>> _appsState =
-      InitialState<List<LauncherModel>>();
+  LauncherState _appsState = InitialState();
 
   @override
-  AppState<List<LauncherModel>> get appsState => _appsState;
+  LauncherState get appsState => _appsState;
 
   LauncherFilterEnum _currentFilter = LauncherFilterEnum.all;
 
@@ -44,21 +44,18 @@ class LauncherControllerImpl extends _Controller implements LauncherController {
   @override
   Future<void> getApps() async {
     _emit(LoadingState());
-    final method =
-        {
-          LauncherFilterEnum.all: 'getAllApps',
-          LauncherFilterEnum.system: 'getSystemApps',
-          LauncherFilterEnum.user: 'getUserApps',
-          LauncherFilterEnum.playStore: 'getAppsFromPlayStore',
-          LauncherFilterEnum.recentlyUsed: 'getRecentlyUsedApps',
-        }[_currentFilter];
+    final method = {
+      LauncherFilterEnum.all: 'getAllApps',
+      LauncherFilterEnum.system: 'getSystemApps',
+      LauncherFilterEnum.user: 'getUserApps',
+      LauncherFilterEnum.playStore: 'getAppsFromPlayStore',
+      LauncherFilterEnum.recentlyUsed: 'getRecentlyUsedApps',
+    }[_currentFilter];
     final result = await launcherRepository.findApps(method ?? '');
-    final AppState<List<LauncherModel>> apps = switch (result) {
-      Success(value: final apps) => SuccessState(data: apps),
-      Error(error: final exception) => ErrorState(
-        message: 'Something went wrong: $exception',
-      ),
-    };
+    final apps = result.fold<LauncherState>(
+      onSuccess: (value) => SuccessState(data: value),
+      onError: (error) => ErrorState(message: '$error'),
+    );
     _emit(apps);
   }
 
@@ -71,7 +68,7 @@ class LauncherControllerImpl extends _Controller implements LauncherController {
     }
   }
 
-  void _emit(AppState<List<LauncherModel>> newValue) {
+  void _emit(LauncherState newValue) {
     if (_appsState != newValue) {
       _appsState = newValue;
       notifyListeners();
