@@ -18,7 +18,18 @@ class _LauncherViewState extends State<LauncherView> {
   @override
   void initState() {
     super.initState();
-    widget.launcherViewModel.getApps();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _getApps();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _getApps() async {
+    await widget.launcherViewModel.getApps();
   }
 
   @override
@@ -39,7 +50,7 @@ class _LauncherViewState extends State<LauncherView> {
       body: Center(
         child: RefreshIndicator(
           onRefresh: () async {
-            await widget.launcherViewModel.getApps();
+            await _getApps();
           },
           child: ListenableBuilder(
             listenable: widget.launcherViewModel,
