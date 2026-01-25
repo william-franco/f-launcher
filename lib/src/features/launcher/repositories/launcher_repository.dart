@@ -1,5 +1,5 @@
 import 'package:f_launcher/src/common/constants/value_constant.dart';
-import 'package:f_launcher/src/common/results/result.dart';
+import 'package:f_launcher/src/common/patterns/result_pattern.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:flutter/services.dart';
 

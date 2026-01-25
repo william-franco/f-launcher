@@ -1,6 +1,6 @@
 import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
-import 'package:f_launcher/src/common/states/state.dart';
+import 'package:f_launcher/src/common/patterns/app_state_pattern.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -68,9 +68,9 @@ class LauncherViewModelImpl extends _ViewModel implements LauncherViewModel {
     }
   }
 
-  void _emit(LauncherState newValue) {
-    if (_appsState != newValue) {
-      _appsState = newValue;
+  void _emit(LauncherState newState) {
+    if (_appsState != newState) {
+      _appsState = newState;
       notifyListeners();
       debugPrint('Launcher state: $_appsState');
     }

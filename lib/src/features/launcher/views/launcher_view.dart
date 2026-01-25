@@ -1,4 +1,4 @@
-import 'package:f_launcher/src/common/states/state.dart';
+import 'package:f_launcher/src/common/patterns/app_state_pattern.dart';
 import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
 import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
 import 'package:f_launcher/src/features/settings/routes/setting_routes.dart';
