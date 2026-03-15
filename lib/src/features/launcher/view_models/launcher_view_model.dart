@@ -1,17 +1,19 @@
 import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
 import 'package:f_launcher/src/common/patterns/app_state_pattern.dart';
+import 'package:f_launcher/src/common/state_management/state_management.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-typedef _ViewModel = ChangeNotifier;
+typedef _ViewModel = StateManagement<LauncherState>;
 
 typedef LauncherState = AppState<List<LauncherModel>>;
 
 abstract interface class LauncherViewModel extends _ViewModel {
-  LauncherState get appsState;
+  LauncherViewModel(super.initialValue);
+
   LauncherFilterEnum get currentFilter;
 
   Future<void> updateFilter(LauncherFilterEnum filter);
@@ -23,12 +25,8 @@ class LauncherViewModelImpl extends _ViewModel implements LauncherViewModel {
   static final _channel = MethodChannel(ValueConstant.pathChannel);
   final LauncherRepository launcherRepository;
 
-  LauncherViewModelImpl({required this.launcherRepository});
-
-  LauncherState _appsState = InitialState();
-
-  @override
-  LauncherState get appsState => _appsState;
+  LauncherViewModelImpl({required this.launcherRepository})
+    : super(InitialState());
 
   LauncherFilterEnum _currentFilter = LauncherFilterEnum.all;
 
@@ -69,10 +67,7 @@ class LauncherViewModelImpl extends _ViewModel implements LauncherViewModel {
   }
 
   void _emit(LauncherState newState) {
-    if (_appsState != newState) {
-      _appsState = newState;
-      notifyListeners();
-      debugPrint('Launcher state: $_appsState');
-    }
+    emitState(newState);
+    debugPrint('Launcher state: $state');
   }
 }

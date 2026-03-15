@@ -1,11 +1,15 @@
+import 'package:f_launcher/src/common/state_management/state_management.dart';
 import 'package:f_launcher/src/features/settings/models/setting_model.dart';
 import 'package:f_launcher/src/features/settings/repositories/setting_repository.dart';
 import 'package:flutter/foundation.dart';
 
-typedef _ViewModel = ChangeNotifier;
+typedef _ViewModel = StateManagement<SettingModel>;
+
+typedef SettingStateBuilder =
+    StateBuilderWidget<SettingViewModel, SettingModel>;
 
 abstract interface class SettingViewModel extends _ViewModel {
-  SettingModel get settingModel;
+  SettingViewModel(super.initialValue);
 
   Future<void> getTheme();
   Future<void> changeTheme({required bool isDarkTheme});
@@ -14,12 +18,8 @@ abstract interface class SettingViewModel extends _ViewModel {
 class SettingViewModelImpl extends _ViewModel implements SettingViewModel {
   final SettingRepository settingRepository;
 
-  SettingViewModelImpl({required this.settingRepository});
-
-  SettingModel _settingModel = SettingModel();
-
-  @override
-  SettingModel get settingModel => _settingModel;
+  SettingViewModelImpl({required this.settingRepository})
+    : super(SettingModel());
 
   @override
   Future<void> getTheme() async {
@@ -29,14 +29,13 @@ class SettingViewModelImpl extends _ViewModel implements SettingViewModel {
 
   @override
   Future<void> changeTheme({required bool isDarkTheme}) async {
-    final model = _settingModel.copyWith(isDarkTheme: isDarkTheme);
+    final model = state.copyWith(isDarkTheme: isDarkTheme);
     await settingRepository.updateTheme(isDarkTheme: isDarkTheme);
     _emit(model);
   }
 
   void _emit(SettingModel newState) {
-    _settingModel = newState;
-    notifyListeners();
-    debugPrint('SettingController: ${settingModel.isDarkTheme}');
+    emitState(newState);
+    debugPrint('SettingController: ${state.isDarkTheme}');
   }
 }

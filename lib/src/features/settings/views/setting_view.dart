@@ -1,5 +1,7 @@
-import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
+import 'package:f_launcher/src/common/state_management/state_management.dart';
 import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
+import 'package:f_launcher/src/features/launcher/widgets/filter_app_type_widget.dart';
+import 'package:f_launcher/src/features/settings/models/setting_model.dart';
 import 'package:f_launcher/src/features/settings/view_models/setting_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -40,31 +42,15 @@ class SettingView extends StatelessWidget {
       body: Center(
         child: ListView(
           children: <Widget>[
-            ListTile(
-              title: const Text('Select application type'),
-              trailing: DropdownButton<LauncherFilterEnum>(
-                value: launcherViewModel.currentFilter,
-                items: LauncherFilterEnum.values.map((filter) {
-                  return DropdownMenuItem<LauncherFilterEnum>(
-                    value: filter,
-                    child: Text(filter.name),
-                  );
-                }).toList(),
-                onChanged: (filter) {
-                  if (filter != null) {
-                    launcherViewModel.updateFilter(filter);
-                  }
-                },
-              ),
-            ),
+            FilterAppTypeWidget(launcherViewModel: launcherViewModel),
             ListTile(
               leading: const Icon(Icons.brightness_6_outlined),
               title: const Text('Dark theme'),
-              trailing: ListenableBuilder(
-                listenable: settingViewModel,
-                builder: (context, child) {
+              trailing: StateBuilderWidget<SettingViewModel, SettingModel>(
+                viewModel: settingViewModel,
+                builder: (context, settingModel) {
                   return Switch(
-                    value: settingViewModel.settingModel.isDarkTheme,
+                    value: settingModel.isDarkTheme,
                     onChanged: (bool isDarkTheme) {
                       settingViewModel.changeTheme(isDarkTheme: isDarkTheme);
                     },

@@ -1,4 +1,5 @@
 import 'package:f_launcher/src/common/patterns/app_state_pattern.dart';
+import 'package:f_launcher/src/common/state_management/state_management.dart';
 import 'package:f_launcher/src/common/widgets/skeleton_refresh_widget.dart';
 import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
 import 'package:f_launcher/src/features/settings/routes/setting_routes.dart';
@@ -32,6 +33,10 @@ class _LauncherViewState extends State<LauncherView> {
     await widget.launcherViewModel.getApps();
   }
 
+  Future<void> _openApp(String packageName) async {
+    widget.launcherViewModel.openApp(packageName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +57,10 @@ class _LauncherViewState extends State<LauncherView> {
           onRefresh: () async {
             await _getApps();
           },
-          child: ListenableBuilder(
-            listenable: widget.launcherViewModel,
-            builder: (context, child) {
-              return switch (widget.launcherViewModel.appsState) {
+          child: StateBuilderWidget<LauncherViewModel, LauncherState>(
+            viewModel: widget.launcherViewModel,
+            builder: (context, launcherModel) {
+              return switch (launcherModel) {
                 InitialState() => const Text('List is empty.'),
                 LoadingState() => ListView.builder(
                   itemCount: 10,
@@ -76,7 +81,7 @@ class _LauncherViewState extends State<LauncherView> {
                           title: Text(app.name),
                           subtitle: Text(app.packageName),
                           onTap: () {
-                            widget.launcherViewModel.openApp(app.packageName);
+                            _openApp(app.packageName);
                           },
                         ),
                       ),
