@@ -7,13 +7,11 @@ import 'package:f_launcher/src/features/launcher/repositories/launcher_repositor
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-typedef _ViewModel = StateManagement<LauncherState>;
-
 typedef LauncherState = AppState<List<LauncherModel>>;
 
-abstract interface class LauncherViewModel extends _ViewModel {
-  LauncherViewModel(super.initialValue);
+typedef _ViewModel = StateManagement<LauncherState>;
 
+abstract interface class LauncherViewModel extends _ViewModel {
   LauncherFilterEnum get currentFilter;
 
   Future<void> updateFilter(LauncherFilterEnum filter);
@@ -25,10 +23,12 @@ class LauncherViewModelImpl extends _ViewModel implements LauncherViewModel {
   static final _channel = MethodChannel(ValueConstant.pathChannel);
   final LauncherRepository launcherRepository;
 
-  LauncherViewModelImpl({required this.launcherRepository})
-    : super(InitialState());
+  LauncherViewModelImpl({required this.launcherRepository}) : super();
 
   LauncherFilterEnum _currentFilter = LauncherFilterEnum.all;
+
+  @override
+  LauncherState build() => InitialState<List<LauncherModel>>();
 
   @override
   LauncherFilterEnum get currentFilter => _currentFilter;

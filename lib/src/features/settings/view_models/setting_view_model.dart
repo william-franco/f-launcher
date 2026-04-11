@@ -5,12 +5,7 @@ import 'package:flutter/foundation.dart';
 
 typedef _ViewModel = StateManagement<SettingModel>;
 
-typedef SettingStateBuilder =
-    StateBuilderWidget<SettingViewModel, SettingModel>;
-
 abstract interface class SettingViewModel extends _ViewModel {
-  SettingViewModel(super.initialValue);
-
   Future<void> getTheme();
   Future<void> changeTheme({required bool isDarkTheme});
 }
@@ -18,8 +13,10 @@ abstract interface class SettingViewModel extends _ViewModel {
 class SettingViewModelImpl extends _ViewModel implements SettingViewModel {
   final SettingRepository settingRepository;
 
-  SettingViewModelImpl({required this.settingRepository})
-    : super(SettingModel());
+  SettingViewModelImpl({required this.settingRepository}) : super();
+
+  @override
+  SettingModel build() => SettingModel();
 
   @override
   Future<void> getTheme() async {
