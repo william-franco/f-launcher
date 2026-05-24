@@ -1,9 +1,10 @@
 import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/patterns/result_pattern.dart';
+import 'package:f_launcher/src/features/launcher/exceptions/launcher_exception.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:flutter/services.dart';
 
-typedef LauncherResult = Result<List<LauncherModel>, Exception>;
+typedef LauncherResult = Result<List<LauncherModel>, LauncherException>;
 
 abstract interface class LauncherRepository {
   Future<LauncherResult> findApps(String methodName);
@@ -25,7 +26,7 @@ class LauncherRepositoryImpl implements LauncherRepository {
           .toList();
       return SuccessResult(value: success);
     } on Exception catch (error) {
-      return ErrorResult(error: error);
+      return ErrorResult(error: LauncherException('$error'));
     }
   }
 

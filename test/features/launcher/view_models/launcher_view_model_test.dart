@@ -2,6 +2,7 @@ import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
 import 'package:f_launcher/src/common/patterns/app_state_pattern.dart';
 import 'package:f_launcher/src/common/patterns/result_pattern.dart';
+import 'package:f_launcher/src/features/launcher/exceptions/launcher_exception.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
 import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
@@ -19,11 +20,11 @@ void main() {
     late MockLauncherRepository mockLauncherRepository;
     late LauncherViewModel viewModel;
 
-    final dummySuccess = SuccessResult<List<LauncherModel>, Exception>(
+    final dummySuccess = SuccessResult<List<LauncherModel>, LauncherException>(
       value: [],
     );
-    final dummyError = ErrorResult<List<LauncherModel>, Exception>(
-      error: Exception('dummy'),
+    final dummyError = ErrorResult<List<LauncherModel>, LauncherException>(
+      error: LauncherException('dummy'),
     );
 
     setUpAll(() {
@@ -76,7 +77,7 @@ void main() {
     // ---------------------------------------------------------------------------
 
     test('should start with InitialState', () {
-      expect(viewModel.state, isA<InitialState<List<LauncherModel>>>());
+      expect(viewModel.state, isA<InitialState<List<LauncherModel>, LauncherException>>());
     });
 
     test('should start with filter set to LauncherFilterEnum.all', () {
@@ -103,10 +104,10 @@ void main() {
 
         // assert
         expect(emittedStates.length, equals(2));
-        expect(emittedStates[0], isA<LoadingState<List<LauncherModel>>>());
-        expect(emittedStates[1], isA<SuccessState<List<LauncherModel>>>());
+        expect(emittedStates[0], isA<LoadingState<List<LauncherModel>, LauncherException>>());
+        expect(emittedStates[1], isA<SuccessState<List<LauncherModel>, LauncherException>>());
 
-        final success = emittedStates[1] as SuccessState<List<LauncherModel>>;
+        final success = emittedStates[1] as SuccessState<List<LauncherModel>, LauncherException>;
         expect(success.data.length, equals(tApps.length));
         expect(success.data.first.name, equals(tApps.first.name));
       });
@@ -115,7 +116,7 @@ void main() {
           'when repository returns ErrorResult', () async {
         // arrange
         when(mockLauncherRepository.findApps(any)).thenAnswer(
-          (_) async => ErrorResult(error: Exception('Channel unavailable')),
+          (_) async => ErrorResult(error: LauncherException('Channel unavailable')),
         );
 
         final emittedStates = <LauncherState>[];
@@ -125,11 +126,11 @@ void main() {
         await viewModel.getApps();
 
         // assert
-        expect(emittedStates[0], isA<LoadingState<List<LauncherModel>>>());
-        expect(emittedStates[1], isA<ErrorState<List<LauncherModel>>>());
+        expect(emittedStates[0], isA<LoadingState<List<LauncherModel>, LauncherException>>());
+        expect(emittedStates[1], isA<ErrorState<List<LauncherModel>, LauncherException>>());
 
-        final error = emittedStates[1] as ErrorState<List<LauncherModel>>;
-        expect(error.message, contains('Channel unavailable'));
+        final error = emittedStates[1] as ErrorState<List<LauncherModel>, LauncherException>;
+        expect(error.error.message, contains('Channel unavailable'));
       });
 
       test('should emit SuccessState with empty list '
@@ -146,7 +147,7 @@ void main() {
         await viewModel.getApps();
 
         // assert
-        final success = emittedStates[1] as SuccessState<List<LauncherModel>>;
+        final success = emittedStates[1] as SuccessState<List<LauncherModel>, LauncherException>;
         expect(success.data, isEmpty);
       });
 
@@ -233,8 +234,8 @@ void main() {
 
           // assert
           expect(emittedStates.length, equals(2));
-          expect(emittedStates[0], isA<LoadingState<List<LauncherModel>>>());
-          expect(emittedStates[1], isA<SuccessState<List<LauncherModel>>>());
+          expect(emittedStates[0], isA<LoadingState<List<LauncherModel>, LauncherException>>());
+          expect(emittedStates[1], isA<SuccessState<List<LauncherModel>, LauncherException>>());
         },
       );
 

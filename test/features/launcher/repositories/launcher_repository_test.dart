@@ -1,5 +1,6 @@
 import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/patterns/result_pattern.dart';
+import 'package:f_launcher/src/features/launcher/exceptions/launcher_exception.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
 import 'package:flutter/services.dart';
@@ -65,9 +66,9 @@ void main() {
         final result = await repository.findApps('getAllApps');
 
         // assert
-        expect(result, isA<SuccessResult<List<LauncherModel>, Exception>>());
+        expect(result, isA<SuccessResult<List<LauncherModel>, LauncherException>>());
         final apps =
-            (result as SuccessResult<List<LauncherModel>, Exception>).value;
+            (result as SuccessResult<List<LauncherModel>, LauncherException>).value;
         expect(apps.length, equals(tApps.length));
         expect(apps.first.name, equals(tApps.first.name));
         expect(apps.first.packageName, equals(tApps.first.packageName));
@@ -100,9 +101,9 @@ void main() {
         final result = await repository.findApps('getAllApps');
 
         // assert
-        expect(result, isA<SuccessResult<List<LauncherModel>, Exception>>());
+        expect(result, isA<SuccessResult<List<LauncherModel>, LauncherException>>());
         final apps =
-            (result as SuccessResult<List<LauncherModel>, Exception>).value;
+            (result as SuccessResult<List<LauncherModel>, LauncherException>).value;
         expect(apps, isEmpty);
       });
 
@@ -113,7 +114,7 @@ void main() {
         // act
         final result = await repository.findApps('getAllApps');
         final apps =
-            (result as SuccessResult<List<LauncherModel>, Exception>).value;
+            (result as SuccessResult<List<LauncherModel>, LauncherException>).value;
 
         // assert
         expect(apps.first.icon, isA<Uint8List>());
@@ -131,7 +132,7 @@ void main() {
         // act
         final result = await repository.findApps('getAllApps');
         final apps =
-            (result as SuccessResult<List<LauncherModel>, Exception>).value;
+            (result as SuccessResult<List<LauncherModel>, LauncherException>).value;
 
         // assert
         expect(apps.first.icon, isA<Uint8List>());
@@ -153,7 +154,7 @@ void main() {
           final result = await repository.findApps('getAllApps');
 
           // assert
-          expect(result, isA<ErrorResult<List<LauncherModel>, Exception>>());
+          expect(result, isA<ErrorResult<List<LauncherModel>, LauncherException>>());
         },
       );
 
@@ -167,10 +168,10 @@ void main() {
           final result = await repository.findApps('getAllApps');
 
           // assert
-          expect(result, isA<ErrorResult<List<LauncherModel>, Exception>>());
+          expect(result, isA<ErrorResult<List<LauncherModel>, LauncherException>>());
           final error =
-              (result as ErrorResult<List<LauncherModel>, Exception>).error;
-          expect(error, isA<Exception>());
+              (result as ErrorResult<List<LauncherModel>, LauncherException>).error;
+          expect(error, isA<LauncherException>());
         },
       );
 

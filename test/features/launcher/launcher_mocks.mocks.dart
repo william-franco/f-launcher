@@ -6,12 +6,14 @@
 import 'dart:async' as _i3;
 
 import 'package:f_launcher/src/common/patterns/result_pattern.dart' as _i4;
+import 'package:f_launcher/src/features/launcher/exceptions/launcher_exception.dart'
+    as _i6;
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart'
     as _i5;
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:mockito/src/dummies.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -38,21 +40,22 @@ class MockLauncherRepository extends _i1.Mock
   }
 
   @override
-  _i3.Future<_i4.Result<List<_i5.LauncherModel>, Exception>> findApps(
-    String? methodName,
-  ) =>
+  _i3.Future<_i4.Result<List<_i5.LauncherModel>, _i6.LauncherException>>
+  findApps(String? methodName) =>
       (super.noSuchMethod(
             Invocation.method(#findApps, [methodName]),
             returnValue:
                 _i3.Future<
-                  _i4.Result<List<_i5.LauncherModel>, Exception>
+                  _i4.Result<List<_i5.LauncherModel>, _i6.LauncherException>
                 >.value(
-                  _i6.dummyValue<
-                    _i4.Result<List<_i5.LauncherModel>, Exception>
+                  _i7.dummyValue<
+                    _i4.Result<List<_i5.LauncherModel>, _i6.LauncherException>
                   >(this, Invocation.method(#findApps, [methodName])),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i5.LauncherModel>, Exception>>);
+          as _i3.Future<
+            _i4.Result<List<_i5.LauncherModel>, _i6.LauncherException>
+          >);
 
   @override
   _i3.Future<void> openApp(String? packageName) =>

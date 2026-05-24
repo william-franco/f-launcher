@@ -88,7 +88,7 @@ class _LauncherViewState extends State<LauncherView> {
                     );
                   },
                 ),
-                ErrorState(message: final message) => Text(message),
+                ErrorState(error: final e) => Text(e.message),
               };
             },
           ),
