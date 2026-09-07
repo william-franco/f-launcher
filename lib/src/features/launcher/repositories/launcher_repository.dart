@@ -4,7 +4,7 @@ import 'package:f_launcher/src/features/launcher/exceptions/launcher_exception.d
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
 import 'package:flutter/services.dart';
 
-typedef LauncherResult = Result<List<LauncherModel>, LauncherException>;
+typedef LauncherResult = ResultPattern<List<LauncherModel>, LauncherException>;
 
 abstract interface class LauncherRepository {
   Future<LauncherResult> findApps(String methodName);

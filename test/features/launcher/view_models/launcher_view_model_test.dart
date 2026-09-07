@@ -1,6 +1,6 @@
 import 'package:f_launcher/src/common/constants/value_constant.dart';
 import 'package:f_launcher/src/common/enums/launcher_filter_enum.dart';
-import 'package:f_launcher/src/common/patterns/app_state_pattern.dart';
+import 'package:f_launcher/src/common/patterns/state_pattern.dart';
 import 'package:f_launcher/src/common/patterns/result_pattern.dart';
 import 'package:f_launcher/src/features/launcher/exceptions/launcher_exception.dart';
 import 'package:f_launcher/src/features/launcher/models/launcher_model.dart';
