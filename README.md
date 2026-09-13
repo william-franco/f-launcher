@@ -1,12 +1,26 @@
 # F Launcher
 
-Custom Android-style app launcher.
+Android-style home launcher that lists installed applications and opens them via intents.
+
+Focuses on grid layout, app metadata, and navigation patterns familiar from stock launchers.
+
+Shared modules handle routing, theming, and platform integration.
+
+## Structure
+
+```mermaid
+flowchart LR
+  LauncherGrid --> LauncherViewModel
+  LauncherViewModel --> AppsRepository
+  AppsRepository --> PlatformPackageManager
+  LauncherGrid --> AppLaunchIntent
+```
 
 ## Stack
 
 | Technology | Version |
 |------------|---------|
-| Dart SDK | ^3.13.2 |
+| Dart SDK | ^3.13.3 |
 | cupertino_icons | ^1.0.8 |
 | get_it | ^9.2.1 |
 | go_router | ^17.2.3 |
