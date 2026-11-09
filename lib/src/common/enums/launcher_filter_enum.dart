@@ -1,7 +1,1 @@
-enum LauncherFilterEnum {
-  all,
-  system,
-  user,
-  playStore,
-  recentlyUsed,
-}
+enum LauncherFilterEnum { all, system, user, playStore, recentlyUsed }

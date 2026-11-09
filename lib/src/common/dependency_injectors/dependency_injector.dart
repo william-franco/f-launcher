@@ -1,4 +1,5 @@
 import 'package:f_launcher/src/common/services/storage_service.dart';
+import 'package:f_launcher/src/common/services/url_launcher_service.dart';
 import 'package:f_launcher/src/features/launcher/view_models/launcher_view_model.dart';
 import 'package:f_launcher/src/features/launcher/repositories/launcher_repository.dart';
 import 'package:f_launcher/src/features/settings/view_models/setting_view_model.dart';
@@ -8,6 +9,9 @@ import 'package:get_it/get_it.dart';
 final locator = GetIt.instance;
 
 void dependencyInjector() {
+  locator.registerLazySingleton<UrlLauncherService>(
+    () => UrlLauncherServiceImpl(),
+  );
   _startStorageService();
   _startFeatureLauncher();
   _startFeatureSetting();
@@ -30,7 +34,10 @@ void _startFeatureLauncher() {
 
 void _startFeatureSetting() {
   locator.registerCachedFactory<SettingRepository>(
-    () => SettingRepositoryImpl(storageService: locator<StorageService>()),
+    () => SettingRepositoryImpl(
+      storageService: locator<StorageService>(),
+      urlLauncherService: locator<UrlLauncherService>(),
+    ),
   );
   locator.registerLazySingleton<SettingViewModel>(
     () => SettingViewModelImpl(settingRepository: locator<SettingRepository>()),

@@ -77,7 +77,10 @@ void main() {
     // ---------------------------------------------------------------------------
 
     test('should start with InitialState', () {
-      expect(viewModel.state, isA<InitialState<List<LauncherModel>, LauncherException>>());
+      expect(
+        viewModel.state,
+        isA<InitialState<List<LauncherModel>, LauncherException>>(),
+      );
     });
 
     test('should start with filter set to LauncherFilterEnum.all', () {
@@ -92,9 +95,8 @@ void main() {
       test('should emit [LoadingState, SuccessState] '
           'when repository returns SuccessResult', () async {
         // arrange
-        when(
-          mockLauncherRepository.findApps(any),
-        ).thenAnswer((_) async => SuccessResult(value: tApps));
+        when(mockLauncherRepository.findApps(any))
+            .thenAnswer((_) async => SuccessResult(value: tApps));
 
         final emittedStates = <LauncherState>[];
         viewModel.addListener(() => emittedStates.add(viewModel.state));
@@ -104,10 +106,18 @@ void main() {
 
         // assert
         expect(emittedStates.length, equals(2));
-        expect(emittedStates[0], isA<LoadingState<List<LauncherModel>, LauncherException>>());
-        expect(emittedStates[1], isA<SuccessState<List<LauncherModel>, LauncherException>>());
+        expect(
+          emittedStates[0],
+          isA<LoadingState<List<LauncherModel>, LauncherException>>(),
+        );
+        expect(
+          emittedStates[1],
+          isA<SuccessState<List<LauncherModel>, LauncherException>>(),
+        );
 
-        final success = emittedStates[1] as SuccessState<List<LauncherModel>, LauncherException>;
+        final success =
+            emittedStates[1]
+                as SuccessState<List<LauncherModel>, LauncherException>;
         expect(success.data.length, equals(tApps.length));
         expect(success.data.first.name, equals(tApps.first.name));
       });
@@ -116,7 +126,8 @@ void main() {
           'when repository returns ErrorResult', () async {
         // arrange
         when(mockLauncherRepository.findApps(any)).thenAnswer(
-          (_) async => ErrorResult(error: LauncherException('Channel unavailable')),
+          (_) async =>
+              ErrorResult(error: LauncherException('Channel unavailable')),
         );
 
         final emittedStates = <LauncherState>[];
@@ -126,19 +137,26 @@ void main() {
         await viewModel.getApps();
 
         // assert
-        expect(emittedStates[0], isA<LoadingState<List<LauncherModel>, LauncherException>>());
-        expect(emittedStates[1], isA<ErrorState<List<LauncherModel>, LauncherException>>());
+        expect(
+          emittedStates[0],
+          isA<LoadingState<List<LauncherModel>, LauncherException>>(),
+        );
+        expect(
+          emittedStates[1],
+          isA<ErrorState<List<LauncherModel>, LauncherException>>(),
+        );
 
-        final error = emittedStates[1] as ErrorState<List<LauncherModel>, LauncherException>;
+        final error =
+            emittedStates[1]
+                as ErrorState<List<LauncherModel>, LauncherException>;
         expect(error.error.message, contains('Channel unavailable'));
       });
 
       test('should emit SuccessState with empty list '
           'when repository returns an empty SuccessResult', () async {
         // arrange
-        when(
-          mockLauncherRepository.findApps(any),
-        ).thenAnswer((_) async => SuccessResult(value: <LauncherModel>[]));
+        when(mockLauncherRepository.findApps(any))
+            .thenAnswer((_) async => SuccessResult(value: <LauncherModel>[]));
 
         final emittedStates = <LauncherState>[];
         viewModel.addListener(() => emittedStates.add(viewModel.state));
@@ -147,15 +165,16 @@ void main() {
         await viewModel.getApps();
 
         // assert
-        final success = emittedStates[1] as SuccessState<List<LauncherModel>, LauncherException>;
+        final success =
+            emittedStates[1]
+                as SuccessState<List<LauncherModel>, LauncherException>;
         expect(success.data, isEmpty);
       });
 
       test('should notify listeners exactly twice per getApps call', () async {
         // arrange
-        when(
-          mockLauncherRepository.findApps(any),
-        ).thenAnswer((_) async => SuccessResult(value: tApps));
+        when(mockLauncherRepository.findApps(any))
+            .thenAnswer((_) async => SuccessResult(value: tApps));
 
         int notifyCount = 0;
         viewModel.addListener(() => notifyCount++);
@@ -183,18 +202,16 @@ void main() {
         test('should call findApps with "${entry.value}" '
             'when currentFilter is ${entry.key.name}', () async {
           // arrange
-          when(
-            mockLauncherRepository.findApps(any),
-          ).thenAnswer((_) async => SuccessResult(value: tApps));
+          when(mockLauncherRepository.findApps(any))
+              .thenAnswer((_) async => SuccessResult(value: tApps));
 
           // Set internal filter via updateFilter (also calls getApps).
           // Reset listener count after that call.
           await viewModel.updateFilter(entry.key);
 
           // assert — verify the exact method string was forwarded
-          verify(
-            mockLauncherRepository.findApps(entry.value),
-          ).called(greaterThanOrEqualTo(1));
+          verify(mockLauncherRepository.findApps(entry.value))
+              .called(greaterThanOrEqualTo(1));
         });
       }
     });
@@ -206,9 +223,8 @@ void main() {
     group('updateFilter', () {
       test('should update currentFilter and call getApps', () async {
         // arrange
-        when(
-          mockLauncherRepository.findApps(any),
-        ).thenAnswer((_) async => SuccessResult(value: tApps));
+        when(mockLauncherRepository.findApps(any))
+            .thenAnswer((_) async => SuccessResult(value: tApps));
 
         // act
         await viewModel.updateFilter(LauncherFilterEnum.system);
@@ -222,9 +238,8 @@ void main() {
         'should emit [LoadingState, SuccessState] after filter change',
         () async {
           // arrange
-          when(
-            mockLauncherRepository.findApps(any),
-          ).thenAnswer((_) async => SuccessResult(value: tApps));
+          when(mockLauncherRepository.findApps(any))
+              .thenAnswer((_) async => SuccessResult(value: tApps));
 
           final emittedStates = <LauncherState>[];
           viewModel.addListener(() => emittedStates.add(viewModel.state));
@@ -234,8 +249,14 @@ void main() {
 
           // assert
           expect(emittedStates.length, equals(2));
-          expect(emittedStates[0], isA<LoadingState<List<LauncherModel>, LauncherException>>());
-          expect(emittedStates[1], isA<SuccessState<List<LauncherModel>, LauncherException>>());
+          expect(
+            emittedStates[0],
+            isA<LoadingState<List<LauncherModel>, LauncherException>>(),
+          );
+          expect(
+            emittedStates[1],
+            isA<SuccessState<List<LauncherModel>, LauncherException>>(),
+          );
         },
       );
 
@@ -243,9 +264,8 @@ void main() {
         'should reflect the latest filter after multiple sequential updates',
         () async {
           // arrange
-          when(
-            mockLauncherRepository.findApps(any),
-          ).thenAnswer((_) async => SuccessResult(value: tApps));
+          when(mockLauncherRepository.findApps(any))
+              .thenAnswer((_) async => SuccessResult(value: tApps));
 
           // act
           await viewModel.updateFilter(LauncherFilterEnum.user);
@@ -265,30 +285,27 @@ void main() {
     // ---------------------------------------------------------------------------
 
     group('openApp', () {
-      test(
-        'should invoke openApp on the MethodChannel with the correct packageName',
-        () async {
-          // arrange
-          String? capturedPackage;
-          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-              .setMockMethodCallHandler(
-                MethodChannel(ValueConstant.pathChannel),
-                (call) async {
-                  if (call.method == 'openApp') {
-                    capturedPackage =
-                        (call.arguments as Map)['packageName'] as String?;
-                  }
-                  return null;
-                },
-              );
+      test('should invoke openApp on the MethodChannel with the correct packageName', () async {
+        // arrange
+        String? capturedPackage;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              MethodChannel(ValueConstant.pathChannel),
+              (call) async {
+                if (call.method == 'openApp') {
+                  capturedPackage =
+                      (call.arguments as Map)['packageName'] as String?;
+                }
+                return null;
+              },
+            );
 
-          // act
-          await viewModel.openApp('com.flutter.app');
+        // act
+        await viewModel.openApp('com.flutter.app');
 
-          // assert
-          expect(capturedPackage, equals('com.flutter.app'));
-        },
-      );
+        // assert
+        expect(capturedPackage, equals('com.flutter.app'));
+      });
 
       test(
         'should complete without error when channel call succeeds',
@@ -317,9 +334,8 @@ void main() {
         'should not change the LauncherState when openApp is called',
         () async {
           // arrange
-          when(
-            mockLauncherRepository.findApps(any),
-          ).thenAnswer((_) async => SuccessResult(value: tApps));
+          when(mockLauncherRepository.findApps(any))
+              .thenAnswer((_) async => SuccessResult(value: tApps));
           await viewModel.getApps();
           final stateBeforeOpen = viewModel.state;
 

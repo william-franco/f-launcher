@@ -4,7 +4,6 @@ import 'package:f_launcher/src/features/launcher/widgets/filter_app_type_widget.
 import 'package:f_launcher/src/features/settings/models/setting_model.dart';
 import 'package:f_launcher/src/features/settings/view_models/setting_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingView extends StatelessWidget {
@@ -30,9 +29,8 @@ class SettingView extends StatelessWidget {
           icon: const Icon(Icons.code),
           label: const Text('GitHub'),
           onPressed: () {
-            launchUrl(
-              Uri.parse('https://github.com/william-franco'),
-              mode: LaunchMode.externalApplication,
+            settingViewModel.openUrl(
+              url: Uri.parse('https://github.com/william-franco'),
             );
           },
         ),
